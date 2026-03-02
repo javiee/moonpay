@@ -1,0 +1,20 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model currencies {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String   @unique
+  icon      String
+  price     Decimal  @db.Decimal(15, 5)
+  createdAt DateTime @default(now())
+}
