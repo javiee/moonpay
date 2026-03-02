@@ -16,6 +16,9 @@ env:
 jobs:
   app-build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./moonpay-app
 
     steps:
       - name: Checkout Code
@@ -112,7 +115,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:$IMAGE_TAG .
+        run: docker build -f ./moonpay-app/docker/Dockerfile -t $IMAGE_NAME:$IMAGE_TAG ./moonpay-app
 
       - name: Push Docker image
         run: docker push $IMAGE_NAME:$IMAGE_TAG
