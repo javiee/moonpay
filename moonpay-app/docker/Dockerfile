@@ -11,7 +11,6 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
 
-# Install dependencies (set dummy DB URL so prisma generate in postinstall succeeds)
 ENV POSTGRES_PRISMA_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN pnpm install
 
