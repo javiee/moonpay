@@ -1,0 +1,24 @@
+image:
+  repository: ghcr.io/javiee/moonpay-app
+  tag: dev-25c8dd0
+  pullPolicy: IfNotPresent
+
+replicas: 2
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+service:
+  port: 3000
+
+secretName: moonpay-app

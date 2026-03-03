@@ -93,6 +93,9 @@ jobs:
             git tag $new_tag
             git push origin $new_tag
 
+      - name: Print Image Tag
+        run: echo "Image tag to be built:" "${{ steps.create-tag.outputs.tag }}"
+
           else
             echo "Unable to determine tag"
             exit 1

@@ -108,3 +108,41 @@ docker compose up -d postgres
 # Start full stack (requires Dockerfile)
 docker compose up -d
 ```
+
+## Kubernetes Deployment
+
+### Prerequisites
+
+- A running Kubernetes cluster
+- Helm 3+
+- `kubectl` configured
+
+### Create the PostgreSQL secret
+
+```bash
+kubectl create secret generic postgres-postgres \
+  --from-literal=POSTGRES_USER="postgres" \
+  --from-literal=POSTGRES_PASSWORD="postgres" \
+  --from-literal=POSTGRES_DB="currencies"
+```
+
+### Deploy PostgreSQL
+
+```bash
+helm install postgres ./charts/postgres
+```
+
+### Create the application secret
+
+```bash
+kubectl create secret generic moonpay-app \
+  --from-literal=POSTGRES_PRISMA_URL="postgresql://postgres:postgres@postgres-postgres:5432/currencies"
+```
+
+### Deploy the application
+
+```bash
+helm install moonpay ./charts/moonpay-app
+```
+
+Database migrations run automatically as a pre-install/pre-upgrade Helm hook.

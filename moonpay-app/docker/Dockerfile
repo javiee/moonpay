@@ -39,6 +39,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -46,6 +48,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+
+# Install prisma CLI for migrations
+ENV POSTGRES_PRISMA_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+RUN pnpm add prisma@7.3.0 && pnpm exec prisma generate
 
 USER nextjs
 
@@ -53,6 +61,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start-up command: Runs migrations then starts the server
-# Note: Ensure your DATABASE_URL is provided via environment variables
 CMD ["node", "server.js"]
