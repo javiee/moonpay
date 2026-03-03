@@ -93,13 +93,13 @@ jobs:
             git tag $new_tag
             git push origin $new_tag
 
-      - name: Print Image Tag
-        run: echo "Image tag to be built:" "${{ steps.create-tag.outputs.tag }}"
-
           else
             echo "Unable to determine tag"
             exit 1
           fi
+
+      - name: Print Image Tag
+        run: echo "Image tag to be built:" "${{ steps.create-tag.outputs.tag }}"
 
   ghcr-publish:
     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
