@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/javiee/moonpay-app
-  tag: dev-25c8dd0
+  tag: dev-92d60e0
   pullPolicy: IfNotPresent
 
 replicas: 2
