@@ -5,6 +5,7 @@ metadata:
   name: postgres
   namespace: flux-system
 spec:
+  targetNamespace: prod
   install:
     createNamespace: true
   interval: 10m
