@@ -25,4 +25,10 @@ spec:
             {{- toYaml .Values.env | nindent 12 }}
           securityContext:
             {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          volumeMounts:
+            - name: cache
+              mountPath: /home/nextjs/.cache
+      volumes:
+        - name: cache
+          emptyDir: {}
 {{- end }}
