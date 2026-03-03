@@ -13,39 +13,28 @@ spec:
         app: {{ .Release.Name }}-moonpay-app
     spec:
       securityContext:
-        runAsUser: 1001
-        runAsGroup: 1001
-        runAsNonRoot: true
-        fsGroup: 1001
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: moonpay-app
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.containerPort }}
           env:
-            - name: POSTGRES_PRISMA_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secretName }}
-                  key: POSTGRES_PRISMA_URL
+            {{- toYaml .Values.env | nindent 12 }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           readinessProbe:
             httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
+              path: {{ .Values.probes.readiness.path }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
           livenessProbe:
             httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 10
-            periodSeconds: 15
+              path: {{ .Values.probes.liveness.path }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}

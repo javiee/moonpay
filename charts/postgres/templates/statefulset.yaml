@@ -17,18 +17,14 @@ spec:
         - name: postgres
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
-            - containerPort: 5432
-          envFrom:
-            - secretRef:
-                name: {{ .Release.Name }}-postgres
+            - containerPort: {{ .Values.containerPort }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
           readinessProbe:
-            exec:
-              command: ["pg_isready", "-U", "postgres"]
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
       volumes:
         - name: data
           emptyDir: {}

@@ -7,4 +7,4 @@ spec:
     app: {{ .Release.Name }}-moonpay-app
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 3000
+      targetPort: {{ .Values.containerPort }}

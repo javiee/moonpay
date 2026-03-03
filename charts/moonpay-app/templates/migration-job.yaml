@@ -1,3 +1,4 @@
+{{- if .Values.migration.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -7,30 +8,21 @@ metadata:
     helm.sh/hook-weight: "0"
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
-  backoffLimit: 3
+  backoffLimit: {{ .Values.migration.backoffLimit }}
   template:
     metadata:
       labels:
         app: {{ .Release.Name }}-migrate
     spec:
       securityContext:
-        runAsUser: 1001
-        runAsGroup: 1001
-        runAsNonRoot: true
-        fsGroup: 1001
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       restartPolicy: Never
       containers:
         - name: migrate
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          command: ["pnpm", "exec", "prisma", "migrate", "deploy"]
+          command: {{ .Values.migration.command | toJson }}
           env:
-            - name: POSTGRES_PRISMA_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secretName }}
-                  key: POSTGRES_PRISMA_URL
+            {{- toYaml .Values.env | nindent 12 }}
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+{{- end }}

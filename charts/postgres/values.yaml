@@ -2,10 +2,30 @@ image:
   repository: postgres
   tag: "17-alpine"
 
-postgres:
-  user: postgres
-  password: postgres
-  db: currencies
+containerPort: 5432
+
+env:
+  - name: POSTGRES_USER
+    valueFrom:
+      secretKeyRef:
+        name: postgres-postgres
+        key: POSTGRES_USER
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-postgres
+        key: POSTGRES_PASSWORD
+  - name: POSTGRES_DB
+    valueFrom:
+      secretKeyRef:
+        name: postgres-postgres
+        key: POSTGRES_DB
+
+readinessProbe:
+  exec:
+    command: ["pg_isready", "-U", "postgres"]
+  initialDelaySeconds: 5
+  periodSeconds: 10
 
 storage:
   persistent: false

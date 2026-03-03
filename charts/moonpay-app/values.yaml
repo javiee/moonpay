@@ -5,6 +5,21 @@ image:
 
 replicas: 2
 
+containerPort: 3000
+
+podSecurityContext:
+  runAsUser: 1001
+  runAsGroup: 1001
+  runAsNonRoot: true
+  fsGroup: 1001
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
 resources:
   requests:
     cpu: 100m
@@ -22,3 +37,25 @@ service:
   port: 3000
 
 secretName: moonpay-app
+
+env:
+  - name: POSTGRES_PRISMA_URL
+    valueFrom:
+      secretKeyRef:
+        name: moonpay-app
+        key: POSTGRES_PRISMA_URL
+
+probes:
+  readiness:
+    path: /
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    path: /
+    initialDelaySeconds: 10
+    periodSeconds: 15
+
+migration:
+  enabled: true
+  command: ["pnpm", "exec", "prisma", "migrate", "deploy"]
+  backoffLimit: 3
