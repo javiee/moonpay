@@ -49,7 +49,7 @@ kubectl create secret generic postgres-postgres \
 
 ```bash
 kubectl create secret generic moonpay-app \
-  --from-literal=POSTGRES_PRISMA_URL="postgresql://postgres:postgres@postgres-postgres:5432/currencies"
+  --from-literal=POSTGRES_PRISMA_URL="postgresql://postgres:postgres@prod-postgres-postgres:5432/currencies"
 ```
 
 ### Bootstrap flux

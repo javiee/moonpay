@@ -59,17 +59,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Determine Image Tag
         id: create-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ "${{ github.ref }}" == "refs/heads/${{ env.DEVELOP_BRANCH }}" ]; then
             TAG_PREFIX=$(git rev-parse --short HEAD)
             echo "tag=dev-$TAG_PREFIX" >> $GITHUB_OUTPUT
 
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            git fetch --tags
-            last_tag=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null)
+            last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
             if [ -z "$last_tag" ]; then
               new_tag="v1.0.0"
@@ -92,8 +96,9 @@ jobs:
             fi
 
             echo "tag=$new_tag" >> $GITHUB_OUTPUT
-            git tag $new_tag
-            git push origin $new_tag
+            gh api repos/${{ github.repository }}/git/refs \
+              -f ref="refs/tags/$new_tag" \
+              -f sha="${{ github.sha }}"
 
           else
             echo "Unable to determine tag"
