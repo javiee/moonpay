@@ -1,0 +1,40 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: moonpay
+  namespace: prod
+spec:
+  install:
+    createNamespace: true
+  interval: 10m
+  dependsOn:
+    - name: postgres
+      namespace: prod
+  chart:
+    spec:
+      chart: ./charts/moonpay-app
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  values:
+    image:
+      repository: ghcr.io/javiee/moonpay-app
+      tag: dev-92d60e0
+      pullPolicy: IfNotPresent
+    replicas: 2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    autoscaling:
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 80
+    service:
+      port: 3000
+    secretName: moonpay-app

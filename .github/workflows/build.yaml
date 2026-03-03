@@ -16,6 +16,11 @@ env:
 jobs:
   app-build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./moonpay-app
+    env:
+      POSTGRES_PRISMA_URL: postgresql://dummy:dummy@localhost:5432/dummy
 
     steps:
       - name: Checkout Code
@@ -93,6 +98,9 @@ jobs:
             exit 1
           fi
 
+      - name: Print Image Tag
+        run: echo "Image tag to be built:" "${{ steps.create-tag.outputs.tag }}"
+
   ghcr-publish:
     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -112,7 +120,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:$IMAGE_TAG .
+        run: docker build -f ./moonpay-app/docker/Dockerfile -t $IMAGE_NAME:$IMAGE_TAG ./moonpay-app
 
       - name: Push Docker image
         run: docker push $IMAGE_NAME:$IMAGE_TAG

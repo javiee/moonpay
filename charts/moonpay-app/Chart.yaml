@@ -1,0 +1,5 @@
+apiVersion: v2
+name: moonpay-app
+description: MoonPay Node.js application
+version: 0.1.0
+type: application
