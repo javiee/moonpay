@@ -21,7 +21,7 @@ spec:
   values:
     image:
       repository: ghcr.io/javiee/moonpay-app
-      tag: v1.0.0 # {"$imagepolicy": "prod:moonpay-app:tag"}
+      tag: v1.0.1 # {"$imagepolicy": "prod:moonpay-app:tag"}
       pullPolicy: IfNotPresent
     replicas: 2
     resources:
