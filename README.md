@@ -67,3 +67,12 @@ flux bootstrap github \
   --personal
 ```
 
+### Port-forward
+```bash
+ kubectl port-forward svc/prod-moonpay-moonpay-app 3000:3000 -n prod
+```
+
+### To do
+* Deploy seal secrets to manage secrets gitops way
+* Deploy image automations to fully automate deployments
+* Deploy ingress
