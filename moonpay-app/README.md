@@ -1,7 +1,7 @@
 # MoonPay DevOps Challenge
 
 A Next.js application displaying cryptocurrency prices, built with Prisma 7 and PostgreSQL.
-
+ this a test
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router, Turbopack)
