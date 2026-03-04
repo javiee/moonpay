@@ -8,8 +8,8 @@ spec:
   imageRepositoryRef:
     name: moonpay-app
   policy:
-  semver:
-    range: x.x.x
+    semver:
+      range: x.x.x
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
