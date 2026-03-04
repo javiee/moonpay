@@ -1,4 +1,3 @@
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -22,7 +21,7 @@ spec:
   values:
     image:
       repository: ghcr.io/javiee/moonpay-app
-      tag: dev-92d60e0 # {"$imagepolicy": "prod:moonpay-app:tag"}
+      tag: v1.0.0 # {"$imagepolicy": "prod:moonpay-app:tag"}
       pullPolicy: IfNotPresent
     replicas: 2
     resources:
