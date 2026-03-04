@@ -55,6 +55,7 @@ probes:
     initialDelaySeconds: 10
     periodSeconds: 15
 
+
 migration:
   enabled: true
   command: ["pnpm", "exec", "prisma", "migrate", "deploy"]

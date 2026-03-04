@@ -1,0 +1,38 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: moonpay-app
+  namespace: prod
+spec:
+  imageRepositoryRef:
+    name: moonpay-app
+  policy:
+  semver:
+    range: x.x.x
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: moonpay-app
+  namespace: prod
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+    push:
+      branch: main
+  update:
+    path: ./gitops/apps/prod/moonpay-app.yaml
+    strategy: Setters
