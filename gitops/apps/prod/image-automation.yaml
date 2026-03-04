@@ -1,5 +1,14 @@
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: moonpay-app
+  namespace: prod
+spec:
+  image: ghcr.io/javiee/moonpay-app
+  interval: 10m
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
   name: moonpay-app
